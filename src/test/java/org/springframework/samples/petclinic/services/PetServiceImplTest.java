@@ -142,9 +142,10 @@ public class PetServiceImplTest {
 		owner1.setCity("Sevilla");
 		owner1.setTelephone("666666666");
 		pet1.setOwner(owner1);
+		PetDTO petDTOResponse=PetMapper.INSTANCE.petToPetDTO(pet1);
 		
-		Mockito.when(petRepositoryMock.getOne(anyInt())).thenReturn(pet1);
-		Assert.assertEquals(listaEsperada, petService.findAll());
+		Mockito.when(petRepositoryMock.getOne(any())).thenReturn(pet1);
+		Assert.assertEquals(petDTOResponse, petService.findById(1));
 	}
 
 	@Test
