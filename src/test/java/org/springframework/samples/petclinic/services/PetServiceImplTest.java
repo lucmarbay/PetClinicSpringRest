@@ -150,7 +150,27 @@ public class PetServiceImplTest {
 
 	@Test
 	public void testDelete() {
-		fail("Not yet implemented");
+		Pet pet1 = new Pet();
+		pet1.setId(1);
+		pet1.setName("Pepe");
+		Date date1 = new Date(2000, 9, 7);
+		pet1.setBirthDate(date1);
+		PetType petType1 = new PetType();
+		petType1.setId(1);
+		petType1.setName("shark");
+		pet1.setType(petType1);
+		Owner owner1 = new Owner();
+		owner1.setId(1);
+		owner1.setFirstName("asd");
+		owner1.setLastName("fgh");
+		owner1.setAddress("calle sin nombre");
+		owner1.setCity("Sevilla");
+		owner1.setTelephone("666666666");
+		pet1.setOwner(owner1);
+		Mockito.when(petRepositoryMock.getOne(any())).thenReturn(pet1);
+		petService.delete(1);
+		Mockito.verify(petRepositoryMock).getOne(any());
+		Mockito.verify(petRepositoryMock).delete(pet1);;
 	}
 
 	@Test
