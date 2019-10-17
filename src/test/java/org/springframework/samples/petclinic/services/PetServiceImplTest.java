@@ -1,6 +1,8 @@
 package org.springframework.samples.petclinic.services;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.fail;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -10,21 +12,31 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mockito;
-import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Bean;
 import org.springframework.samples.petclinic.dto.PetDTO;
 import org.springframework.samples.petclinic.mapper.PetMapper;
 import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.PetType;
 import org.springframework.samples.petclinic.repository.PetRepository;
+import org.springframework.test.context.junit4.SpringRunner;
 
+//@RunWith(SpringRunner.class)
+//@SpringBootTest
 public class PetServiceImplTest {
-
+	
+//	@Autowired
 	private PetServiceImpl petService;
+	
+//	@MockBean
 	private PetRepository petRepositoryMock;
+	
 	@Before
 	public void setUp() throws Exception {
 		petRepositoryMock = Mockito.mock(PetRepository.class);
@@ -78,7 +90,7 @@ public class PetServiceImplTest {
 			listaEsperada.add(PetMapper.INSTANCE.petToPetDTO(pet));
 		}
 		
-		when(petRepositoryMock.findAll()).thenReturn(petList);
+		Mockito.when(petRepositoryMock.findAll()).thenReturn(petList);
 		Assert.assertEquals(listaEsperada, petService.findAll());
 		
 	}
@@ -105,7 +117,7 @@ public class PetServiceImplTest {
 		
 		PetDTO petDTOResponse=PetMapper.INSTANCE.petToPetDTO(pet1);
 		
-		when(petRepositoryMock.save(any(Pet.class)).thenReturn(pet1);
+		Mockito.when(petRepositoryMock.save(any(Pet.class))).thenReturn(pet1);
 		Assert.assertEquals(petDTOResponse, petService.save(petDTOResponse));
 		
 
@@ -113,7 +125,26 @@ public class PetServiceImplTest {
 
 	@Test
 	public void testFindById() {
-		fail("Not yet implemented");
+		Pet pet1 = new Pet();
+		pet1.setId(1);
+		pet1.setName("Pepe");
+		Date date1 = new Date(2000, 9, 7);
+		pet1.setBirthDate(date1);
+		PetType petType1 = new PetType();
+		petType1.setId(1);
+		petType1.setName("shark");
+		pet1.setType(petType1);
+		Owner owner1 = new Owner();
+		owner1.setId(1);
+		owner1.setFirstName("asd");
+		owner1.setLastName("fgh");
+		owner1.setAddress("calle sin nombre");
+		owner1.setCity("Sevilla");
+		owner1.setTelephone("666666666");
+		pet1.setOwner(owner1);
+		
+		Mockito.when(petRepositoryMock.getOne(anyInt())).thenReturn(pet1);
+		Assert.assertEquals(listaEsperada, petService.findAll());
 	}
 
 	@Test
