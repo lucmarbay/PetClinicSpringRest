@@ -2,6 +2,7 @@ package org.springframework.samples.petclinic.controllers;
 
 import static org.junit.Assert.*;
 
+import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.List;
 
@@ -17,6 +18,9 @@ import org.springframework.samples.petclinic.dto.PetDTO;
 import org.springframework.samples.petclinic.services.PetServiceImpl;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
+
+import junit.framework.Assert;
 
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.Matchers.is;
@@ -33,25 +37,30 @@ public class PetControllerTest {
  
     @MockBean
     private PetServiceImpl petService;
-
+    
 	@Before
 	public void setUp() throws Exception {
 	}
 
 	@Test
 	public void testGetAllPets() throws Exception {
+		
 		PetDTO pet = new PetDTO();
 		pet.setName("Alex");
 		 
 	    List<PetDTO> allPets = Arrays.asList(pet);
+	    
+//	    when(petService.findAll()).thenReturn(allPets);
 	 
 	    given(petService.findAll()).willReturn(allPets);
-	 
-	    mvc.perform(get("/api/employees")
+	    
+	    
+	    mvc.perform(get("/pet")
 	      .contentType(MediaType.APPLICATION_JSON))
 	      .andExpect(status().isOk())
 	      .andExpect(jsonPath("$", hasSize(1)))
-	      .andExpect(jsonPath("$[0].name", is(pet.getName())));
+	      .andExpect(jsonPath("$[1].name", is(pet.getName())));
+	    
 	}
 
 	@Test

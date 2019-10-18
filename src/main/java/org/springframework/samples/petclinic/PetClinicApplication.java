@@ -37,8 +37,8 @@ import org.springframework.samples.petclinic.model.Vet;
  */
 @SpringBootApplication
 public class PetClinicApplication {
-	@Autowired
-	VetRepository vetRepository;
+//	@Autowired
+//	VetRepository vetRepository;
 	
 	private static final Logger log = LoggerFactory.getLogger(PetClinicApplication.class);
 
@@ -46,20 +46,20 @@ public class PetClinicApplication {
         SpringApplication.run(PetClinicApplication.class, args);
     }
     
-    @Bean
-	public CommandLineRunner demoVetRepository(VetRepository vetRepository, SpecialityRepository specialityRepository) {
-		return (args) -> {
-			log.info("*****************************************************");
-			log.info("BOOTCAMP - Spring y Spring Data - vetRepository");
-			log.info("*****************************************************");
-
-			List<Vet> vets = vetRepository.findAll();
-			
-			for(Vet vet : vets) {
-				log.info(vet.toString());
-			}
-			
-		};
-	}
+//    @Bean
+//	public CommandLineRunner demoVetRepository(VetRepository vetRepository, SpecialityRepository specialityRepository) {
+//		return (args) -> {
+//			log.info("*****************************************************");
+//			log.info("BOOTCAMP - Spring y Spring Data - vetRepository");
+//			log.info("*****************************************************");
+//
+//			List<Vet> vets = vetRepository.findAll();
+//			
+//			for(Vet vet : vets) {
+//				log.info(vet.toString());
+//			}
+//			
+//		};
+//	}
     
 }
