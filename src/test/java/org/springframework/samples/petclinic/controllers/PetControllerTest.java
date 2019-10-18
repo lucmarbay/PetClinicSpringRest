@@ -2,10 +2,36 @@ package org.springframework.samples.petclinic.controllers;
 
 import static org.junit.Assert.*;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.samples.petclinic.dto.PetDTO;
+import org.springframework.samples.petclinic.services.PetServiceImpl;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
 
+import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.is;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+@RunWith(SpringRunner.class)
+@WebMvcTest(PetController.class)
 public class PetControllerTest {
+	@Autowired
+    private MockMvc mvc;
+ 
+    @MockBean
+    private PetServiceImpl petService;
 
 	@Before
 	public void setUp() throws Exception {
@@ -13,7 +39,18 @@ public class PetControllerTest {
 
 	@Test
 	public void testGetAllPets() {
-		fail("Not yet implemented");
+		PetDTO pet = new PetDTO();
+		pet.setName("Alex");
+		 
+	    List<PetDTO> allPets = Arrays.asList(pet);
+	 
+	    given(petService.findAll()).willReturn(allPets);
+	 
+	    mvc.perform(get("/api/employees")
+	      .contentType(MediaType.APPLICATION_JSON))
+	      .andExpect(status().isOk())
+	      .andExpect(jsonPath("$", hasSize(1)))
+	      .andExpect(jsonPath("$[0].name", is(pet.getName())));
 	}
 
 	@Test
