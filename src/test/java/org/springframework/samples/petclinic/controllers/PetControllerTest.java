@@ -55,17 +55,27 @@ public class PetControllerTest {
 	    given(petService.findAll()).willReturn(allPets);
 	    
 	    
-	    mvc.perform(get("/pet")
+	    mvc.perform(get("/pet/")
 	      .contentType(MediaType.APPLICATION_JSON))
 	      .andExpect(status().isOk())
 	      .andExpect(jsonPath("$", hasSize(1)))
-	      .andExpect(jsonPath("$[1].name", is(pet.getName())));
+	      .andExpect(jsonPath("$[0].name", is(pet.getName())));
 	    
 	}
 
 	@Test
-	public void testFindById() {
-		fail("Not yet implemented");
+	public void testFindById() throws Exception {
+		PetDTO pet = new PetDTO();
+		pet.setName("Alex");
+		
+		given(petService.findById(anyInt())).willReturn(pet);
+		
+		mvc.perform(get("/pet/")
+			      .contentType(MediaType.APPLICATION_JSON))
+			      .andExpect(status().isOk())
+			      .andExpect(jsonPath("$", hasSize(1)))
+			      .andExpect(jsonPath("$[0].name", is(pet.getName())));
+		
 	}
 
 	@Test
