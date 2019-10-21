@@ -9,6 +9,7 @@ import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -132,8 +133,19 @@ public class PetControllerTest {
 	}
 
 	@Test
-	public void testDeletePet() {
-		fail("Not yet implemented");
+	public void testDeletePet() throws Exception {
+		PetDTO pet = new PetDTO();
+		pet.setId(1);
+		pet.setName("Alex");
+		given(petService.delete(anyInt())).willReturn(pet);
+		
+		mvc.perform(delete("/pet/{id}", 1)
+				.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.id", is(pet.getId())))
+				.andExpect(jsonPath("$.name", is(pet.getName())));
+		verify(petService, times(1)).delete(pet.getId());
+		Assert.assertEquals(pet, petService.delete(1));
 	}
 
 }
