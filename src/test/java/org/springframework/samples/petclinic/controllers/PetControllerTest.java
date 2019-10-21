@@ -11,6 +11,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -115,14 +116,15 @@ public class PetControllerTest {
 		PetDTO pet = new PetDTO();
 		pet.setId(1);
 		pet.setName("Alex");
+//		given(petService.updatePet(anyInt(), any(PetDTO.class))).willReturn(pet);
 		when(petService.updatePet(anyInt(), any(PetDTO.class))).thenReturn(pet);
 
-		mvc.perform(post("/pet/{id}", 1)
+		mvc.perform(put("/pet/{id}", 1)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(pet)))
 				.andExpect(status().isOk())
 				.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON_UTF8_VALUE))
-//				.andExpect(jsonPath("$.id", is(1)))
+				.andExpect(jsonPath("$.id", is(1)))
 				.andExpect(jsonPath("$.name", is("Alex")));
 		
 		verify(petService, times(1)).updatePet(1, pet);

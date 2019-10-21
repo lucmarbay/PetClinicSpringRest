@@ -37,7 +37,7 @@ public class PetController {
 	public PetDTO createOrSavePet(@RequestBody PetDTO petDTO) {
 		return petService.save(petDTO);
     }
-	@PutMapping(value = "/{id}", consumes = "application/json")
+	@PutMapping(value = "/{id}", consumes = "application/json", produces = "application/json")
 	public PetDTO updatePet(@PathVariable(value = "id") Integer id, @RequestBody PetDTO petDetails){
 		return petService.updatePet(id, petDetails);
 	}
