@@ -70,11 +70,13 @@ public class PetControllerTest {
 		
 		given(petService.findById(anyInt())).willReturn(pet);
 		
-		mvc.perform(get("/pet/{id}")
+		mvc.perform(get("/pet/{id}", 1)
 			      .contentType(MediaType.APPLICATION_JSON))
 			      .andExpect(status().isOk())
-			      .andExpect(jsonPath("$", hasSize(1)))
-			      .andExpect(jsonPath("$[0].name", is(pet.getName())));
+			      .andExpect(jsonPath("$.id", is(1)))
+			      .andExpect(jsonPath("$.name", is(pet.getName())));
+		
+		verify(petService, times(1)).findById(1);
 		
 	}
 
