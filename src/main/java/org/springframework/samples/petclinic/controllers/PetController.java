@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 //https://dzone.com/articles/spring-boot-2-restful-api-documentation-with-swagg
 @RestController
@@ -31,16 +32,17 @@ public class PetController {
     public PetDTO findById(@PathVariable(value = "id") Integer id) {
 		return petService.findById(id);
     }
-	@PostMapping(value = "/", consumes = "application/json")
-	public void createOrSavePet(@RequestBody PetDTO petDTO) {
-		petService.save(petDTO);
+    @ResponseBody
+	@PostMapping(value = "/", consumes = "application/json", produces = "application/json")
+	public PetDTO createOrSavePet(@RequestBody PetDTO petDTO) {
+		return petService.save(petDTO);
     }
 	@PutMapping(value = "/{id}", consumes = "application/json")
 	public PetDTO updatePet(@PathVariable(value = "id") Integer id, @RequestBody PetDTO petDetails){
 		return petService.updatePet(id, petDetails);
 	}
 	@DeleteMapping(value = "/{id}")
-	public void deletePet(@PathVariable(value="id") Integer id){
-		petService.delete(id);
+	public PetDTO deletePet(@PathVariable(value="id") Integer id){
+		 return petService.delete(id);
 	}
 }

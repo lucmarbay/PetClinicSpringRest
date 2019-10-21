@@ -54,9 +54,11 @@ public class PetServiceImpl implements IPetService{
 	public List<PetType> findPetTypes(){
 		return this.findPetTypes();
 	}**/
-	public void delete(Integer id) {
+	public PetDTO delete(Integer id) {
 		Pet pet = petRepository.getOne(id);
 		petRepository.delete(pet);
+		PetDTO responsePetDTO = PetMapper.INSTANCE.petToPetDTO(pet);
+		return responsePetDTO;
 	}
 	
 	public PetDTO updatePet(Integer id, PetDTO petDetails) {
