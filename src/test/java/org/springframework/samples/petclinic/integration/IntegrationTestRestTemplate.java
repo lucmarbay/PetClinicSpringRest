@@ -54,8 +54,6 @@ public class IntegrationTestRestTemplate {
 		Assert.assertNotNull(responseListPetDTO);
 		Assert.assertEquals(13, responseListPetDTO.size());
 		
-
-		
 		
 	}
 
