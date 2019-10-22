@@ -2,6 +2,8 @@ package org.springframework.samples.petclinic.integration;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 import java.util.Arrays;
 import java.util.List;
@@ -22,9 +24,8 @@ import org.springframework.samples.petclinic.dto.PetDTO;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class IntegrationTest {
-	@LocalServerPort
-	private int port;
+public class IntegrationTestRestTemplate {
+
 	
 	@Autowired
 	private TestRestTemplate restTemplate;
@@ -38,17 +39,23 @@ public class IntegrationTest {
 		ResponseEntity<PetDTO> responsePetDTO = restTemplate
 				.postForEntity("/pet/", pet, PetDTO.class);
 
-		PetDTO petDTO = responsePetDTO.getBody();
+		PetDTO response = responsePetDTO.getBody();
 
-		assertThat(petDTO.getName(), is(pet.getName()));
+		assertThat(response.getName(), is(pet.getName()));
 	}
 	@Test
 	public void findAll() {
 		
-		PetDTO pet = new PetDTO();
-		pet.setName("Alex");
+		ResponseEntity<List> response = restTemplate
+				.getForEntity("/pet/",List.class);
+		List<PetDTO> responseListPetDTO = (List<PetDTO>) response.getBody();
+		
+		
+		Assert.assertNotNull(responseListPetDTO);
+		Assert.assertEquals(13, responseListPetDTO.size());
+		
 
-		List<PetDTO> allPets = Arrays.asList(pet);
+		
 		
 	}
 
