@@ -15,6 +15,7 @@
  */
 package org.springframework.samples.petclinic.model;
 
+import org.hibernate.validator.constraints.Range;
 import org.springframework.beans.support.MutableSortDefinition;
 import org.springframework.beans.support.PropertyComparator;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -30,6 +31,7 @@ import javax.persistence.Table;
 
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -58,6 +60,7 @@ public class Pet extends NamedEntity {
     @JoinColumn(name = "type_id")
     private PetType type;
 
+//    @org.hibernate.validator.constraints.NotEmpty(message = "Please provide a Owner")
     @ManyToOne
     @JoinColumn(name = "owner_id")
     private Owner owner;

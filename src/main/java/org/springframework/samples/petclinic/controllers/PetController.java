@@ -2,10 +2,16 @@ package org.springframework.samples.petclinic.controllers;
 
 import java.util.List;
 
+import javax.persistence.EntityNotFoundException;
+import javax.validation.ConstraintViolationException;
+import javax.validation.UnexpectedTypeException;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.samples.petclinic.dto.OwnerDTO;
 import org.springframework.samples.petclinic.dto.PetDTO;
+import org.springframework.samples.petclinic.error.PetConstraintViolationException;
+import org.springframework.samples.petclinic.error.PetNotFoundException;
 import org.springframework.samples.petclinic.services.IPetService;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,12 +36,20 @@ public class PetController {
 	
 	@GetMapping(value = "/{id}")
     public PetDTO findById(@PathVariable(value = "id") Integer id) {
-		return petService.findById(id);
+		try {
+			return petService.findById(id);
+		}catch(EntityNotFoundException e){
+			throw new PetNotFoundException(id);
+		}
     }
     @ResponseBody
 	@PostMapping(value = "/", consumes = "application/json", produces = "application/json")
 	public PetDTO createOrSavePet(@RequestBody PetDTO petDTO) {
-		return petService.save(petDTO);
+    	try {
+    		return petService.save(petDTO);
+    	}catch(ConstraintViolationException e){
+			throw new PetConstraintViolationException(petDTO);
+		}
     }
 	@PutMapping(value = "/{id}", consumes = "application/json", produces = "application/json")
 	public PetDTO updatePet(@PathVariable(value = "id") Integer id, @RequestBody PetDTO petDetails){
