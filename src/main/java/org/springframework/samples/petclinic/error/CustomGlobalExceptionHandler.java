@@ -7,6 +7,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.UnexpectedTypeException;
@@ -31,28 +32,40 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
 //        response.sendError(HttpStatus.NOT_FOUND.value());
 //    }
 
-	@ExceptionHandler(PetNotFoundException.class)
-	public ResponseEntity<CustomErrorResponse> customHandleNotFound(Exception ex, WebRequest request) {
-
-		CustomErrorResponse errors = new CustomErrorResponse();
-		errors.setTimestamp(LocalDateTime.now());
-		errors.setError(ex.getMessage());
-		errors.setStatus(HttpStatus.NOT_FOUND.value());
-
-		return new ResponseEntity<>(errors, HttpStatus.NOT_FOUND);
-
-	}
-	@ExceptionHandler(PetConstraintViolationException.class)
-	public ResponseEntity<CustomErrorResponse> customHandleNotCreate(Exception ex, WebRequest request) {
-
-		CustomErrorResponse errors = new CustomErrorResponse();
-		errors.setTimestamp(LocalDateTime.now());
-		errors.setError(ex.getMessage());
-		errors.setStatus(HttpStatus.UNPROCESSABLE_ENTITY.value());
-
-		return new ResponseEntity<>(errors, HttpStatus.UNPROCESSABLE_ENTITY);
-
-	}
+//	@ExceptionHandler(PetNotFoundException.class)
+//	public ResponseEntity<CustomErrorResponse> customHandleNotFound(Exception ex, WebRequest request) {
+//
+//		CustomErrorResponse errors = new CustomErrorResponse();
+//		errors.setTimestamp(LocalDateTime.now());
+//		errors.setError(ex.getMessage());
+//		errors.setStatus(HttpStatus.NOT_FOUND.value());
+//
+//		return new ResponseEntity<>(errors, HttpStatus.NOT_FOUND);
+//
+//	}
+//	@ExceptionHandler(PetConstraintViolationException.class)
+//	public ResponseEntity<CustomErrorResponse> customHandleNotCreate(Exception ex, WebRequest request) {
+//
+//		CustomErrorResponse errors = new CustomErrorResponse();
+//		errors.setTimestamp(LocalDateTime.now());
+//		errors.setError(ex.getMessage());
+//		errors.setStatus(HttpStatus.UNPROCESSABLE_ENTITY.value());
+//
+//		return new ResponseEntity<>(errors, HttpStatus.UNPROCESSABLE_ENTITY);
+//
+//	}
+	
+//	@ExceptionHandler(MethodArgumentNotValidException.class)
+//	public ResponseEntity<CustomErrorResponse> customHandleNotFound(Exception ex, WebRequest request) {
+//
+//		CustomErrorResponse errors = new CustomErrorResponse();
+//		errors.setTimestamp(LocalDateTime.now());
+//		errors.setError(ex.getMessage());
+//		errors.setStatus(HttpStatus.METHOD_FAILURE.value());
+//
+//		return new ResponseEntity<>(errors, HttpStatus.METHOD_FAILURE);
+//
+//	}
 
 	// @Validate For Validating Path Variables and Request Parameters
 	@ExceptionHandler(ConstraintViolationException.class)
@@ -70,18 +83,39 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
 	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
 			HttpHeaders headers, HttpStatus status, WebRequest request) {
 
-		Map<String, Object> body = new LinkedHashMap<>();
-		body.put("timestamp", new Date());
-		body.put("status", status.value());
-
-		// Get all fields errors
-		List<String> errors = ex.getBindingResult().getFieldErrors().stream().map(x -> x.getDefaultMessage())
+		//Metodo 1
+//		Map<String, Object> body = new LinkedHashMap<>();
+//		body.put("timestamp", new Date());
+//		body.put("status", status.value());
+//
+//		// Get all fields errors
+//		List<String> errors = ex.getBindingResult().getFieldErrors().stream().map(x -> x.getDefaultMessage())
+//				.collect(Collectors.toList());
+//
+//		body.put("errors", errors);
+//
+//		return new ResponseEntity<>(body, headers, status);
+		
+		//Metodo 2
+		CustomErrorResponse errors = new CustomErrorResponse();
+		errors.setTimestamp(LocalDateTime.now());
+		List<String> mensajeErrors = ex.getBindingResult().getFieldErrors().stream().map(x -> x.getDefaultMessage())
 				.collect(Collectors.toList());
+		errors.setError(mensajeErrors.toString());
+		errors.setStatus(HttpStatus.METHOD_FAILURE.value());
 
-		body.put("errors", errors);
+		return new ResponseEntity<>(errors, HttpStatus.METHOD_FAILURE);
 
-		return new ResponseEntity<>(body, headers, status);
+	}
+	@ExceptionHandler(CustomPetException.class)
+	public ResponseEntity<CustomErrorResponse> controlCustomPetException(HttpServletResponse response, CustomPetException customPetException) throws IOException {
+		
+		CustomErrorResponse errors = new CustomErrorResponse();
+		errors.setTimestamp(LocalDateTime.now());
+		errors.setError(customPetException.getMessage());
+		errors.setStatus(HttpStatus.NOT_ACCEPTABLE.value());
 
+		return new ResponseEntity<>(errors, HttpStatus.NOT_ACCEPTABLE);
 	}
 
 }

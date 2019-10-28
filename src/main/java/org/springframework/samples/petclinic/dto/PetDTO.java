@@ -6,24 +6,30 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
+import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Range;
+import org.springframework.samples.petclinic.error.CustomPetException;
 import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.model.PetType;
 
 public class PetDTO implements Serializable {
-
+	@Min(1)
+	@Max(10)
 	private Integer id;
+	@NotNull
 	private String name;
 	private OwnerDTO owner;
-
+	
+	
 	public Integer getId() {
 		return id;
 	}
 
 	public void setId(Integer id) {
+		
 		this.id = id;
 	}
 

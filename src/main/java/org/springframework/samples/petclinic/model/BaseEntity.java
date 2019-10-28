@@ -32,7 +32,6 @@ import org.hibernate.validator.constraints.Range;
 public class BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Range(min=1,max=16)
     protected Integer id;
 
     public Integer getId() {

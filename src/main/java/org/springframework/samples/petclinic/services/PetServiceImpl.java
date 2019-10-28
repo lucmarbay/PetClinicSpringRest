@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.samples.petclinic.dto.PetDTO;
+import org.springframework.samples.petclinic.error.CustomPetException;
 import org.springframework.samples.petclinic.mapper.PetMapper;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.PetType;
@@ -35,8 +36,10 @@ public class PetServiceImpl implements IPetService{
 		return results;
 	}
 	
-	public PetDTO save(PetDTO petDTO) {
-		
+	public PetDTO save(PetDTO petDTO) throws CustomPetException {
+		if(petDTO.getId()==10) {
+			throw new CustomPetException("no acepto el 10");
+		}
 		Pet pet = this.petRepository.save(PetMapper.INSTANCE.petDTOToPet(petDTO));
 		PetDTO petDTOResponse=PetMapper.INSTANCE.petToPetDTO(pet);
 		return petDTOResponse;
