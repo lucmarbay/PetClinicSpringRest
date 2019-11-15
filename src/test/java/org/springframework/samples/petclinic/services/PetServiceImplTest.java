@@ -20,6 +20,7 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.samples.petclinic.dto.PetDTO;
+import org.springframework.samples.petclinic.error.CustomPetException;
 import org.springframework.samples.petclinic.mapper.PetMapper;
 import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.model.Pet;
@@ -96,7 +97,7 @@ public class PetServiceImplTest {
 	}
 
 	@Test
-	public void testSave() {
+	public void testSave() throws CustomPetException {
 		Pet pet1 = new Pet();
 		pet1.setId(1);
 		pet1.setName("Pepe");

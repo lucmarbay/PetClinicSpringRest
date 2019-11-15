@@ -6,32 +6,49 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.Range;
+import org.springframework.samples.petclinic.error.CustomPetException;
 import org.springframework.samples.petclinic.model.Owner;
+import org.springframework.samples.petclinic.model.PetType;
 
-public class PetDTO implements Serializable{
-
+public class PetDTO implements Serializable {
+//	@Min(5)
+//	@Max(10)
 	private Integer id;
+//	@NotNull
 	private String name;
 	private OwnerDTO owner;
-
+	
+	
 	public Integer getId() {
 		return id;
 	}
+
 	public void setId(Integer id) {
+		
 		this.id = id;
 	}
+
 	public String getName() {
 		return name;
 	}
+
 	public void setName(String name) {
 		this.name = name;
 	}
+
 	public OwnerDTO getOwner() {
 		return owner;
 	}
+
 	public void setOwner(OwnerDTO owner) {
 		this.owner = owner;
 	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -41,6 +58,7 @@ public class PetDTO implements Serializable{
 		result = prime * result + ((owner == null) ? 0 : owner.hashCode());
 		return result;
 	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -67,7 +85,5 @@ public class PetDTO implements Serializable{
 			return false;
 		return true;
 	}
-	
-	
 
 }

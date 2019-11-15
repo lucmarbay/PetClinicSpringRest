@@ -4,16 +4,21 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.samples.petclinic.dto.PetDTO;
+import org.springframework.samples.petclinic.error.CustomPetException;
 import org.springframework.samples.petclinic.mapper.PetMapper;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.PetType;
 import org.springframework.samples.petclinic.repository.PetRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 @Service
+@Validated
 public class PetServiceImpl implements IPetService{
 	
 	private PetRepository petRepository;
@@ -35,14 +40,16 @@ public class PetServiceImpl implements IPetService{
 		return results;
 	}
 	
-	public PetDTO save(PetDTO petDTO) {
-		
+	public PetDTO save(PetDTO petDTO) throws CustomPetException {
+		if(petDTO.getId()==10) {
+			throw new CustomPetException("no acepto el 10", "propiedad id al llamar a save()");
+		}
 		Pet pet = this.petRepository.save(PetMapper.INSTANCE.petDTOToPet(petDTO));
 		PetDTO petDTOResponse=PetMapper.INSTANCE.petToPetDTO(pet);
 		return petDTOResponse;
 	}
-	
-	public PetDTO findById(Integer id) {
+
+	public PetDTO findById(@Valid Integer id) {
 		PetDTO petDTO = new PetDTO();
 		Pet pet = this.petRepository.getOne(id);
 		petDTO.setName(pet.getName());
@@ -54,9 +61,11 @@ public class PetServiceImpl implements IPetService{
 	public List<PetType> findPetTypes(){
 		return this.findPetTypes();
 	}**/
-	public void delete(Integer id) {
+	public PetDTO delete(Integer id) {
 		Pet pet = petRepository.getOne(id);
 		petRepository.delete(pet);
+		PetDTO responsePetDTO = PetMapper.INSTANCE.petToPetDTO(pet);
+		return responsePetDTO;
 	}
 	
 	public PetDTO updatePet(Integer id, PetDTO petDetails) {
