@@ -19,8 +19,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+
 
 @ControllerAdvice
 public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler {
@@ -68,10 +70,10 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
 //	}
 
 	// @Validate For Validating Path Variables and Request Parameters
-	@ExceptionHandler(ConstraintViolationException.class)
-	public void constraintViolationException(HttpServletResponse response) throws IOException {
-		response.sendError(HttpStatus.BAD_REQUEST.value());
-	}
+//	@ExceptionHandler(ConstraintViolationException.class)
+//	public void constraintViolationException(HttpServletResponse response) throws IOException {
+//		response.sendError(HttpStatus.BAD_REQUEST.value());
+//	}
 	
 	@ExceptionHandler(UnexpectedTypeException.class)
 	public void UnexpectedTypeException(HttpServletResponse response) throws IOException {
@@ -112,10 +114,17 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
 		
 		CustomErrorResponse errors = new CustomErrorResponse();
 		errors.setTimestamp(LocalDateTime.now());
-		errors.setError(customPetException.getMessage());
+		errors.setError(customPetException.obtenerListaMensajes().toString());
 		errors.setStatus(HttpStatus.NOT_ACCEPTABLE.value());
 
 		return new ResponseEntity<>(errors, HttpStatus.NOT_ACCEPTABLE);
 	}
+
+    // @Validate For Validating Path Variables and Request Parameters
+    @ExceptionHandler(ConstraintViolationException.class)
+    public void constraintViolationException(HttpServletResponse response) throws IOException {
+        response.sendError(HttpStatus.BAD_REQUEST.value());
+    }
+    
 
 }

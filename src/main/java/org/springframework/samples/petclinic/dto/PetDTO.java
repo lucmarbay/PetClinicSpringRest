@@ -16,10 +16,10 @@ import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.model.PetType;
 
 public class PetDTO implements Serializable {
-	@Min(1)
-	@Max(10)
+//	@Min(5)
+//	@Max(10)
 	private Integer id;
-	@NotNull
+//	@NotNull
 	private String name;
 	private OwnerDTO owner;
 	
